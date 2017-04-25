@@ -5,36 +5,56 @@
  */
 #include "client.h"
 
-Client::Client() {
-    this->curl = curl_easy_init();
-};
+/**
+ HTTP get request
+ Use only path of api; exclude url. That will be added automatically.
 
+ @param path path of api endpoint
+ @return json object of api
+ */
 json Client::get(string path) {
 
+    // curl handler
+    CURL *curl = curl_easy_init();
+    
+    // response of api
     string response;
     
-    if (this->curl) {
+    // curl response code
+    CURLcode res;
+    
+    if (curl) {
         
-        curl_easy_setopt(this->curl, CURLOPT_URL, (this->url + path).c_str());
-        curl_easy_setopt(this->curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, this->response);
-        curl_easy_setopt(this->curl, CURLOPT_WRITEDATA, &response);
+        // setting up to be curled url
+        curl_easy_setopt(curl, CURLOPT_URL, (this->url + path).c_str());
         
-        CURLcode res;
+        // if redirected, follow
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         
-        res = curl_easy_perform(this->curl);
+        // catching response with #response function into local variable response
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, this->response);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        
+        // perform curl and cleanup
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
     }
     
     return json::parse(response);
 };
 
+
+/**
+ Catching curl response into variable requires buffering data
+
+ @param contents contents
+ @param size size
+ @param nmemb nmemb
+ @param userp userp
+ @return size * nmemb
+ */
 size_t Client::response(void *contents, size_t size, size_t nmemb, void *userp) {
     
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
-};
-
-
-Client::~Client() {
-    curl_easy_cleanup(this->curl);
 };

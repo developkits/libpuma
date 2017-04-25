@@ -8,6 +8,9 @@
 #ifndef course_h
 #define course_h
 
+/**
+ Course class definition extending base api class
+ */
 class Course : public Base {
     
     using Base::Base;

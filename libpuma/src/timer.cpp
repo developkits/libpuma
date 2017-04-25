@@ -5,15 +5,22 @@
  */
 #include "timer.h"
 
+/**
+ Adding timestamp to timer
+ */
 void Timer::add() {
-    times.push_back(get_timestamp());
+    times.push_back(this->getTimestamp());
 };
 
+
+/**
+ Dumping timer data from t<total - 2> and t<total - 1>
+ */
 void Timer::dump() {
     
     unsigned long total = times.size();
-    timestamp_t t0;
-    timestamp_t t1;
+    Timer::timestamp t0;
+    Timer::timestamp t1;
     double sec;
     
     try {
@@ -30,4 +37,15 @@ void Timer::dump() {
     }
     
     std::cout << "Executed: " + std::to_string(sec) << std::endl;
+};
+
+/**
+ Getting current timestamp
+ */
+Timer::timestamp Timer::getTimestamp() {
+    
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    
+    return now.tv_usec + (Timer::timestamp)now.tv_sec * 1000000;
 };

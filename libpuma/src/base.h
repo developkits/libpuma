@@ -11,6 +11,9 @@
 
 using json = nlohmann::json;
 
+/**
+ Base class definition
+ */
 class Base {
     
     Client *client;

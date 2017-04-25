@@ -8,6 +8,9 @@
 #ifndef chapter_h
 #define chapter_h
 
+/**
+ Chapter class definition extending base api class
+ */
 class Chapter : public Base {
     
     using Base::Base;

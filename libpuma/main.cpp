@@ -20,7 +20,6 @@ int main(int argc, const char * argv[]) {
 
     Timer timer;
     timer.add();
-    timer.dump();
     
     Client client;
     Chapter chapter(&client);
